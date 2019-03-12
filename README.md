@@ -1,8 +1,5 @@
-# Guardian
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/guardian`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+# 💂‍Guardian
+Poor man's basic authentication 
 
 ## Installation
 
@@ -22,7 +19,35 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Include `Guardian` in your specific controller or a base one
+
+```ruby
+class ApplicationController < ActionController::API
+  include Guardian
+
+  rescue_from Guardian::Unauthenticated do |error|
+    render json: { error_human: error }, status: :unauthorized
+  end
+
+  rescue_from Guardian::Unauthorized do |error|
+    render json: { error_human: error }, status: :forbidden
+  end
+end
+```
+And use `authenticate!` method to check whether user provided credentials
+
+```ruby
+class PetsController < ApplicationController
+  before_action :authenticate!, only: %i[create update delete]
+
+  def create
+    # create a pet
+  end
+end
+```
+
+Done! Whoah
+
 
 ## Development
 
